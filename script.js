@@ -63,6 +63,19 @@ function resizeImg(img, percent) {
     }
 }
 
+
+
+
+function checkCollision(x1,x2,y1,y2,r1,r2,b1,b2) {
+    if(r1>x2 && r2>x1 && b1>y2 && b2>y1){
+        return true;
+    }
+    else{
+        return false ;
+    }
+
+}
+
 let startGame = false;
 
 let xPlayer = 50,
@@ -70,8 +83,8 @@ yPlayer = 665,
     speedPlayer = 5, speedEnemy=50; navPlayer = 'right',
     navEnemy="left",
     xEnemy=660,
-    yEnemy=665, boardPicPlayer=0, boardPicEnemy=0;
-countLife = 1;
+    yEnemy=665, boardPicPlayer=0,borderPicCoin=0, boardPicEnemy=0;
+countLife = 9 , countCoin=0
 
     function boardPic(pic, x, y){
       let picRight, picBottom;
@@ -87,16 +100,17 @@ countLife = 1;
         resizeImg(picEnemy, 8);
         resizeImg(picLife, 5);
         resizeImg(picCoin, 5);
-         boardPicPlayer = boardPic(picPlayer, xPlayer, yPlayer)
+         boardPicPlayer = boardPic(picPlayer, xPlayer, yPlayer);
          
          boardPicEnemy = boardPic(picEnemy, xEnemy, yEnemy);
+         boardPicCoin = boardPic(picCoin, PositionCoin[0], PositionCoin[1]);
         
 
         function startPosition(){
             xPlayer = window.innerWidth*0.05;
             yPlayer = window.innerHeight*0.88-picPlayer.height;
 
-            xEnemy = window.innerWidth*0.85;
+               xEnemy = window.innerWidth*0.85;
             yEnemy = window.innerHeight*0.88-picEnemy.height
         }
            
@@ -104,7 +118,7 @@ countLife = 1;
 
         function moveEnemy(){
             function collisionEnemy(){
-                if(boardPicPlayer[0]>xEnemy&&xPlayer < boardPicEnemy[0] &&yPlayer<boardPicEnemy[1]&&yEnemy<boardPicPlayer[1]) {
+                if(checkCollision(xPlayer,xEnemy,yPlayer,yEnemy,boardPicPlayer[0],boardPicEnemy[0],boardPicPlayer[1],boardPicEnemy[1])) {
                 countLife--;
                 if(countLife<+0){
                     let newGame = confirm('GamerOver:(/nХотите начать заново?');
@@ -151,10 +165,20 @@ countLife = 1;
             let xLife = innerWidth*0.05+picLife.width*1
             ctx.drawImage(picLife, xLife, yLife, picLife.width, picLife.height);
         }
-        
-
+        function collisionCoin() {
+           if(checkCollision(xPlayer,PositionCoin[0],yPlayer,PositionCoin[1],boardPicPlayer[0],boardPicCoin[0],boardPicPlayer[1],boardPicCoin[1])){
+               countCoin++;
+            newPositionCoin();
+           } 
+        }
+        collisionCoin();
+function printText(text,x,y,size,color) {
+    ctx.font = size+"px Elephant ";
+    ctx.fillStyle = color;
+    ctx.fillText(text,x,y)
+}
+printText("Count ="+countCoin,innerWidth*0.05,innerHeight*0.1,innerHeight*0.06,"Green")
     }
-
 
 
 picEnemyLeft.onload=picEnemyRight.onload=picPlayerLeft.onload = picPlayerRight.onload = picBackground.onload = draw;
