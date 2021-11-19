@@ -94,6 +94,30 @@ countLife = 9 , countCoin=0
     }
 
     function draw() {
+        let buttonStart = new Path2D;
+        function drawButton(stokeColor, fillColor){
+            ctx.clearRect(0,0, innerWidth, innerHeight);
+            ctx.drawImage (picBackground, 0, 0, window.innerWidth, window.innerHeight);
+            let widthButton = innerWidth*0.2, heightButton = innerHeight*0.1;
+            let xButthon=innerWidth*0.5-widthButton/2,
+            yButton = innerHeight*0.5 - heightButton/2;
+                        buttonStart.rect(xButthon,yButton,widthButton, heightButton);
+                        function fillButton(){
+                            ctx.strokeStyle = stokeColor;
+                            ctx.fillStyle = fillColor;
+                            ctx.lineWidth = 5;
+                            ctx.stroke(buttonStart)
+                            ctx.fill(buttonStart);
+                        }
+                        fillButton();
+                        printText('Start',xButthon+widthButton/2-20,yButton+heightButton/2+10,40,"black")
+        }
+        function printText(text,x,y,size,color) {
+            ctx.font = size+"px Elephant ";
+            ctx.fillStyle = color;
+            ctx.fillText(text,x,y)
+        }
+        if(startGame){
         let picPlayer = arrPicPlayer[navPlayer]
         let picEnemy = arrPicEnemy[navEnemy]
         resizeImg(picPlayer, 8);
@@ -172,13 +196,22 @@ countLife = 9 , countCoin=0
            } 
         }
         collisionCoin();
-function printText(text,x,y,size,color) {
-    ctx.font = size+"px Elephant ";
-    ctx.fillStyle = color;
-    ctx.fillText(text,x,y)
-}
+
 printText("Count ="+countCoin,innerWidth*0.05,innerHeight*0.1,innerHeight*0.06,"Green")
+    }else{
+        canvas.addEventListener('mousemove',(event)=>{
+            if(ctx.isPointInPath(buttonStart,event.clientX,event.clientY)){
+                drawButton('Dark','Blue');
+            }
+            else{
+                drawButton('Cyan','LightSeaGreen');
+            }
+                
+            
+        });
+        
     }
+}
 
 
 picEnemyLeft.onload=picEnemyRight.onload=picPlayerLeft.onload = picPlayerRight.onload = picBackground.onload = draw;
